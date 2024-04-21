@@ -66,45 +66,97 @@ constexpr uint8_t SWITCH0 = 17; ///< CBUS FLiM push button switch pin
 constexpr uint8_t CAN_RX = 11; ///< CAN2040 Rx pin
 constexpr uint8_t CAN_TX = 12; ///< CAN2040 Tx pin
 
-// Map Module IO
-constexpr uint8_t MODULE_LED = 22; ///< Module LED
-
-constexpr uint8_t MODULE_BUZZ = 2;    ///< Block Instrument Warning Buzzer
-constexpr uint8_t MODULE_BELL = 3;    ///< Block Instrument Bell
+// Map Module IO Pins
+constexpr uint8_t INST_BUZZ = 2;      ///< Block Instrument Warning Buzzer (currently not used)
+constexpr uint8_t INST_BELL = 3;      ///< Block Instrument Bell (currently not used)
 constexpr uint8_t LED_TRAIN_OT_R = 4; ///< Train on Track Remote indication
-constexpr uint8_t LED_TRAIN_OT_L = 5; ///< Train on Track Remote indication
+constexpr uint8_t LED_TRAIN_OT_L = 5; ///< Train on Track Local indication
 constexpr uint8_t LED_NORMAL_R = 6;   ///< Line Normal Remote indication
 constexpr uint8_t LED_NORMAL_L = 7;   ///< Line Normal Local indication
 constexpr uint8_t LED_LINE_CLR_R = 8; ///< Line Clear Remote indication
 constexpr uint8_t LED_LINE_CLR_L = 9; ///< Line Clear Local indication
 
-constexpr uint8_t BELL_PUSH = 18;     ///< Attention bell push
+constexpr uint8_t LINE_CLEAR = 14;     ///< Line Clear request switch from local box
+constexpr uint8_t NORMAL = 15;         ///< Line Normal switch from local box
+constexpr uint8_t TRAIN_ON_TRACK = 16; ///< Train on Track switch from local box
+constexpr uint8_t BELL_PUSH = 18;      ///< Attention bell push (to remote box)
+
+constexpr uint8_t WARN_LED = 22; ///< Line Clear request (commucator) locked warning
+constexpr uint8_t OCCP_LED = 25; ///< Line 'Occupied LED
 
 // CBUS objects
-CBUSConfig module_config; // configuration object
+CBUSConfig module_config; ///< CBUS configuration object
 
 // Construct CBUS Object and assign the module configuration
 CBUSACAN2040 CBUS(module_config);
 
-// module objects
-CBUSLED moduleLED; // Warns of incorrect state
+// Block Instrument objects
+CBUSLED totremoteLED; ///< Train on Track - remote box indicator
+CBUSLED totlocalLED;  ///< Train on Track - local box indicator
+CBUSLED nrmremoteLED; ///< Normal - remote box indicator
+CBUSLED nrmlocalLED;  ///< Normal - local box indicator
+CBUSLED clrremoteLED; ///< Line Clear - remote box indicator
+CBUSLED clrlocalLED;  ///< Line Clear - local box indicator
 
-CBUSLED totrLED;
-CBUSLED totlLED;
-CBUSLED nrmrLED;
-CBUSLED nrmlLED;
-CBUSLED clrrLED;
-CBUSLED clrlLED;
+CBUSSwitch lineClearSW;    ///< Line Clear Switch
+CBUSSwitch trainOnTrackSW; ///< Train on Track Switch
+CBUSSwitch normalSW;       ///< Normal Switch
+CBUSSwitch bellPush;       ///< Remote box attention plunger
 
-CBUSSwitch bellPush;
-
-// Consume own events
-CBUScoe coe;
+CBUSLED warnLED; ///< Line Clear request blocked warning indicator
+CBUSLED occpLED; ///< Block Occupied indicator
 
 // module name, must be 7 characters, space padded.
 module_name_t moduleName = {'B', 'L', 'O', 'C', 'K', ' ', ' '};
 
-bool isLegal = false; // TEMP
+/// Event Constants
+enum class InEventID
+{
+   // Incoming event ID's from remote box
+   commutatorLock,  ///< Commutator is locked (prevent Line Clear)
+   lineClear,       ///< Line Clear
+   trainOnTrack,    ///< Train entered block
+   blockCleared,    ///< Train left block
+   attentionBell,   ///< Attention bell from remote box
+   resetLineClear,  ///< Reset from Line Clear state to Normal (abnormal state transition)
+   // Incoming event ID's to ACK (or NACK) local changes of state
+   lineClearAck,    ///< ACK of our request for Line Clear
+   trainOnTrackAck, ///< ACK of our request for Train on Track
+   blockClearedAck, ///< ACK of our requst for Block Cleared (Normal)
+   lineClearBlocked ///< NACK of our request for Line Clear
+};
+
+/// Outgoing events
+enum class OutEventID
+{
+   lineClearBlocked, ///< Line Clear NACK
+   lineClearAck,     ///< Line Clear ACK
+   trainOnTrackAck,  ///< Train entered block ACK
+   blockClearedAck,  ///< Train left block ACK
+   attentionBell,    ///< Call attention to remote box
+   resetLineClear,   ///< @todo 
+   lineClear,        ///< Line Clear request
+   trainOnTrack,     ///< Train on Track 
+   blockCleared      ///< Train left block
+};
+
+constexpr uint8_t MAX_EVENT_ID = 10; ///< Maximum number of incoming event ID's
+
+/// Block Instrument state machine states
+enum class BlockState
+{
+   Normal,       ///< Block is Normal (unoccupied)
+   LineClear,    ///< Line Clear authorised
+   TrainOnTrack, ///< Train in block
+   LCBlocked,    ///< Line Clear request blocked
+};
+
+// State machine state records
+BlockState remoteBoxState{BlockState::Normal}; ///< Remote Box
+BlockState localBoxState{BlockState::Normal};  ///< Local Box
+
+/// Line Clear (commutator) release
+bool lineClearReleased{true};
 
 // forward function declarations
 void eventhandler(uint8_t index, const CANFrame &msg);
@@ -126,10 +178,10 @@ void setupCBUS()
    bi_decl(bi_1pin_with_name(CAN_TX, "CAN2040 Tx"));
    bi_decl(bi_1pin_with_name(CAN_RX, "CAN2040 Rx"));
 
-   bi_decl(bi_1pin_with_name(MODULE_LED, "Module LED"));
+   bi_decl(bi_1pin_with_name(WARN_LED, "Warning LED"));
 
-   bi_decl(bi_1pin_with_name(MODULE_BUZZ, "Block Instrument Warning Buzzer"));
-   bi_decl(bi_1pin_with_name(MODULE_BELL, "Block Instrument Bell"));
+   bi_decl(bi_1pin_with_name(INST_BUZZ, "Block Instrument Warning Buzzer"));
+   bi_decl(bi_1pin_with_name(INST_BELL, "Block Instrument Attention Bell"));
    bi_decl(bi_1pin_with_name(LED_TRAIN_OT_R, "Train on Track Remote indication"));
    bi_decl(bi_1pin_with_name(LED_TRAIN_OT_L, "Train on Track Remote indication"));
    bi_decl(bi_1pin_with_name(LED_NORMAL_R, "Line Normal Remote indication"));
@@ -143,8 +195,8 @@ void setupCBUS()
    module_config.EE_NVS_START = 10;    // Offset start of Node Variables
    module_config.EE_NUM_NVS = 10;      // Number of Node Variables
    module_config.EE_EVENTS_START = 20; // Offset start of Events
-   module_config.EE_MAX_EVENTS = 32;   // Maximum number of events
-   module_config.EE_NUM_EVS = 1;       // Number of Event Variables per event
+   module_config.EE_MAX_EVENTS = 10;   // Maximum number of events
+   module_config.EE_NUM_EVS = 1;       // Number of Event Variables per event (the InEventID)
    module_config.EE_BYTES_PER_EVENT = (module_config.EE_NUM_EVS + 4);
 
    // initialise and load configuration
@@ -160,7 +212,6 @@ void setupCBUS()
    // assign to CBUS
    CBUS.setParams(params.getParams());
    CBUS.setName(&moduleName);
-   CBUS.consumeOwnEvents(&coe);
 
    // Get the internal CBUS UI objects
    CBUSLED &ledGrn = CBUS.getCBUSGreenLED();
@@ -212,17 +263,33 @@ void setup()
    // Setup CBUS Library
    setupCBUS();
 
-   // configure the module LED, attached to Red LED GP8 via a 1K resistor
-   moduleLED.setPin(MODULE_LED);
+   // Setup IO - LED Outputs
+   totremoteLED.setPin(LED_TRAIN_OT_R);
+   totlocalLED.setPin(LED_TRAIN_OT_L);
+   nrmremoteLED.setPin(LED_NORMAL_R);
+   nrmlocalLED.setPin(LED_NORMAL_L);
+   clrremoteLED.setPin(LED_LINE_CLR_R);
+   clrlocalLED.setPin(LED_LINE_CLR_L);
 
-   totrLED.setPin(LED_TRAIN_OT_R);
-   totlLED.setPin(LED_TRAIN_OT_L);
-   nrmrLED.setPin(LED_NORMAL_R);
-   nrmlLED.setPin(LED_NORMAL_L);
-   clrrLED.setPin(LED_LINE_CLR_R);
-   clrlLED.setPin(LED_LINE_CLR_L);
-
+   // Switch Inputs - active LOW with internal Pull-Up
+   lineClearSW.setPin(LINE_CLEAR, false);
+   trainOnTrackSW.setPin(TRAIN_ON_TRACK, false);
+   normalSW.setPin(NORMAL, false);
    bellPush.setPin(BELL_PUSH, false);
+
+   // Indicator LED's
+   warnLED.setPin(WARN_LED);
+   occpLED.setPin(OCCP_LED);
+
+   // Set default LED states - block NORMAL
+   totremoteLED.off();
+   totlocalLED.off();
+   nrmremoteLED.on();
+   nrmlocalLED.on();
+   clrremoteLED.off();
+   clrlocalLED.off();
+   warnLED.off();
+   occpLED.off();
 
    // Map configuration settings to NV's
    uint8_t NVs[module_config.EE_NUM_NVS]{};
@@ -247,15 +314,19 @@ void loop()
    /// give the switch and LED code some time to run
    //
 
-   moduleLED.run();
+   warnLED.run();
+   occpLED.run();
 
-   totrLED.run();
-   totlLED.run();
-   nrmrLED.run();
-   nrmlLED.run();
-   clrrLED.run();
-   clrlLED.run();
+   totremoteLED.run();
+   totlocalLED.run();
+   nrmremoteLED.run();
+   nrmlocalLED.run();
+   clrremoteLED.run();
+   clrlocalLED.run();
 
+   lineClearSW.run();
+   trainOnTrackSW.run();
+   normalSW.run();
    bellPush.run();
 
    //
@@ -266,20 +337,105 @@ void loop()
 }
 
 //
-/// test for switch input
-/// as an example, it must be have been pressed or released for at least half a second
-/// then send a long CBUS event with opcode ACON for on and ACOF for off
-/// event number (EN) is 1
-
-/// you can just watch for this event in FCU or JMRI, or teach it to another CBUS consumer module
+/// Process switch inputs - transmit ACON / ACOF events based on switch states
 //
 void processModuleSwitchChange()
 {
+   // Transmit Line Clear event requests
+   if (lineClearSW.stateChanged())
+   {
+      CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::lineClear), lineClearSW.isPressed());
+   }
+
+   // Transmit Train on Track
+   if (trainOnTrackSW.stateChanged())
+   {
+      CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::trainOnTrack), trainOnTrackSW.isPressed());
+   }
+
+   // Transmit Train left Block
+   if (normalSW.stateChanged())
+   {
+      CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::blockCleared), normalSW.isPressed());
+   }
+
+   // Transmit bell events based on bell push switch state
    if (bellPush.stateChanged())
    {
-      if (CBUS.sendMyEvent(1U, bellPush.isPressed()))
+      CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::attentionBell), bellPush.isPressed());
+   }
+}
+
+///
+/// @brief Process the Remote State machine requests
+/// 
+/// @param eventID event ID of the incoming event being processed
+///
+void processRemoteStateMachine(InEventID eventID)
+{
+   if (BlockState::Normal == remoteBoxState) // Block is NORMAL
+   {
+      // From Normal, we can only switch to Line Clear
+      if (InEventID::lineClear == eventID)
       {
-         // Sent OK
+         // Check for commutator released
+         if (lineClearReleased)
+         {
+            // OK to set line clear
+            remoteBoxState = BlockState::LineClear;
+
+            // Notify remote box
+            CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::blockClearedAck), false); // Normal OFF
+            CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::lineClearAck), true);     // Line Clear ON
+         }
+         else
+         {
+            // Setting Line Clear is blocked
+            remoteBoxState = BlockState::LCBlocked;
+
+            // Notify remote box
+            CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::lineClearBlocked), true); // Line Clear Blocked
+         }
+      }
+   }
+   else if (BlockState::LineClear == remoteBoxState) // Block is Line Clear
+   {
+      // From Line Clear, we can only switch to Train on Track
+      if (InEventID::trainOnTrack == eventID)
+      {
+         // Set Train on Track
+         remoteBoxState = BlockState::TrainOnTrack;
+
+         // Notify remote box
+         CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::lineClearAck), false);   // Line Clear OFF
+         CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::trainOnTrackAck), true); // Train on Track ON
+      }
+   }
+   else if (BlockState::TrainOnTrack == remoteBoxState) // Block is Train on Track
+   {
+      // From Train on Track, we can only switch to Normal
+      if (InEventID::blockCleared == eventID)
+      {
+         // Set Normal
+         remoteBoxState = BlockState::Normal;
+
+         // Notify remote box
+         CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::trainOnTrackAck), false); // Train in Track OFF
+         CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::blockClearedAck), true);  // Normal ON
+      }
+   }
+   else if (BlockState::LCBlocked == remoteBoxState) // Block is Normal with (blocked) request for Line Clear
+   {
+      // From Line Clear blocked, check for release of lock
+      if (lineClearReleased)
+      {
+         // OK to set line clear
+         remoteBoxState = BlockState::LineClear;
+
+         // Notify remote box
+         CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::lineClearBlocked), false); // Line Clear Blocked OFF
+         CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::blockClearedAck), false); // Normal OFF
+         CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::lineClearAck), true);  // Line Clear ON
       }
    }
 }
@@ -298,17 +454,119 @@ void eventhandler(uint8_t index, const CANFrame &msg)
    // Check for ACON / ACOF events
    if ((opCode == OPC_ACON) || (opCode == OPC_ACOF))
    {
+      // read the value of the (single) event variable (EV) associated with this learned event, this is the eventID
+      uint8_t ID = module_config.getEventEVval(index, 1);
+
+      // Validate before processing
+      if (ID >= MAX_EVENT_ID)
+      {
+         return;
+      }
+
+      // Convert to type safe enum
+      InEventID eventID = static_cast<InEventID>(ID);
+
+      switch (eventID)
+      {
+      case InEventID::commutatorLock:
+         
+         // Lock or release Line Clear commutator
+         lineClearReleased = opCode == OPC_ACON ? false : true;
+
+         // Process state machine on both ACON and ACOF
+         processRemoteStateMachine(eventID);
+         break;
+      case InEventID::lineClear:
+      case InEventID::trainOnTrack:
+      case InEventID::blockCleared:
+         // Only process state machine notification on rising edge (event going ON)
+         if (opCode == OPC_ACON)
+         {
+            processRemoteStateMachine(eventID);
+         }
+         break;
+      case InEventID::resetLineClear:
+         /// @todo reset to Line Clear
+         break;
+      case InEventID::attentionBell:
+         /// @todo Set Bell output
+         break;
+      case InEventID::lineClearAck:
+         // ACK of our Line Clear request
+         localBoxState = BlockState::LineClear;
+         break;
+      case InEventID::trainOnTrackAck:
+         // ACK of our Train on Track request
+         localBoxState = BlockState::TrainOnTrack;
+         break;
+      case InEventID::blockClearedAck:
+         // ACK of our Line Normal request
+         localBoxState = BlockState::Normal;
+         break;
+      case InEventID::lineClearBlocked:
+         // NACK of our Line Clear request
+         localBoxState = BlockState::LCBlocked;
+         break;
+      }
    }
 
-   // Update module LED based on legal status of the frame
-   if (isLegal)
+   // Update block status LEDs from the remote box
+   switch (remoteBoxState)
    {
-      moduleLED.off();
-   }
-   else
+   case BlockState::Normal: // Normal (unoccupied) state
+      totremoteLED.off();
+      nrmremoteLED.on();
+      clrremoteLED.off();
+      warnLED.off();
+      occpLED.off();
+      break;
+   case BlockState::LineClear: // Line Clear authorised
+      totremoteLED.off();
+      nrmremoteLED.off();
+      clrremoteLED.on();
+      warnLED.off();
+      occpLED.on();
+      break;
+   case BlockState::TrainOnTrack: // Train is on Track
+      totremoteLED.on();
+      nrmremoteLED.off();
+      clrremoteLED.off();
+      warnLED.off();
+      occpLED.on();
+      break;
+   case BlockState::LCBlocked: // Line Clear authorisation blocked (commutator locked)
+      totremoteLED.off();
+      nrmremoteLED.on();
+      clrremoteLED.blink();
+      warnLED.on();
+      occpLED.off();
+      break;
+   };
+
+   // Update block status LEDs for the local box
+   switch (localBoxState)
    {
-      moduleLED.blink();
-   }
+   case BlockState::Normal: // Normal (unoccupied) state
+      totlocalLED.off();
+      nrmlocalLED.on();
+      clrlocalLED.off();
+      break;
+   case BlockState::LineClear: // Line Clear authorised
+      totlocalLED.off();
+      nrmlocalLED.off();
+      clrlocalLED.on();
+      break;
+   case BlockState::TrainOnTrack: // Train is on Track
+      totlocalLED.on();
+      nrmlocalLED.off();
+      clrlocalLED.off();
+      break;
+   case BlockState::LCBlocked: // Line Clear authorisation blocked (commutator locked)
+      totlocalLED.off();
+      nrmlocalLED.on();
+      clrlocalLED.blink();
+      break;
+   };
 }
 
 // MODULE MAIN ENTRY
@@ -319,7 +577,7 @@ extern "C" int main(int, char **)
    stdio_init_all();
 
 #if LIB_PICO_STDIO_SEMIHOSTING
-   // Setp CRLF options
+   // Setup CRLF options
    stdio_set_translate_crlf(&stdio_semihosting, false);
 
    printf("CANLocking : Initializing\n");
