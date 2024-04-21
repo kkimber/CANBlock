@@ -40,13 +40,6 @@ jobs:
       working-directory: ${{github.workspace}}/pico-sdk
       run: git submodule update --init        
       
-    - name: Apply FatFsPicoSPI patch
-      working-directory: ${{github.workspace}}/src/FatFsPicoSPI
-      run: |
-        echo "Patching no-OS-FatFS-SD-SPI-RPi-Pico cmake"
-        git apply ${{github.workspace}}/FatFsPicoSPI.patch
-      shell: bash
-
     - name: Install Doxygen
       run:  sudo apt-get install doxygen graphviz -y
       shell: bash
