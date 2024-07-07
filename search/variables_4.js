@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['data_617',['data',['../CBUSCircularBuffer_8h.html#a42d1ffa59dc4f825e6eacad28d967cd0',1,'CANFrame']]],
-  ['default_5fcanid_618',['DEFAULT_CANID',['../CBUSConfig_8cpp.html#a77ba3a4ddf7493845cd89b3bc225e1ed',1,'CBUSConfig.cpp']]],
-  ['default_5fnn_619',['DEFAULT_NN',['../CBUSConfig_8cpp.html#ad7e07f38b63ebcc2b302cbc8db0e973d',1,'CBUSConfig.cpp']]]
+  ['data_618',['data',['../CBUSCircularBuffer_8h.html#a42d1ffa59dc4f825e6eacad28d967cd0',1,'CANFrame']]],
+  ['debounce_5fdelay_619',['DEBOUNCE_DELAY',['../CBUSSwitch_8cpp.html#aeafb521b105278596f7e9b4103e2c66f',1,'CBUSSwitch.cpp']]],
+  ['default_5fcanid_620',['DEFAULT_CANID',['../CBUSConfig_8cpp.html#a77ba3a4ddf7493845cd89b3bc225e1ed',1,'CBUSConfig.cpp']]],
+  ['default_5fnn_621',['DEFAULT_NN',['../CBUSConfig_8cpp.html#ad7e07f38b63ebcc2b302cbc8db0e973d',1,'CBUSConfig.cpp']]]
 ];

@@ -69,6 +69,7 @@ var NAVTREEINDEX0 =
 "CBUSParams_8h.html#structcbusparam__t":[7,0,1,14,0],
 "CBUSParams_8h_source.html":[7,0,1,14],
 "CBUSSwitch_8cpp.html":[7,0,1,15],
+"CBUSSwitch_8cpp.html#aeafb521b105278596f7e9b4103e2c66f":[7,0,1,15,0],
 "CBUSSwitch_8h.html":[7,0,1,16],
 "CBUSSwitch_8h_source.html":[7,0,1,16],
 "CBUSUtil_8h.html":[7,0,1,17],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "classCBUSLongMessage.html#a7257c1868f3c9d03b41189ea184a68d1":[6,0,9,13],
 "classCBUSLongMessage.html#a738394ba43e73985860fac2922fa9ea2":[6,0,9,4],
 "classCBUSLongMessage.html#a7926b5074476ae25151c3d1838dbb3a4":[6,0,9,29],
-"classCBUSLongMessage.html#a7d8a7a7a40f8da9cc59a1f76239c4038":[6,0,9,28],
-"classCBUSLongMessage.html#a89ea9a350f44b90cc0f0cb2b5b679dde":[6,0,9,18]
+"classCBUSLongMessage.html#a7d8a7a7a40f8da9cc59a1f76239c4038":[6,0,9,28]
 };

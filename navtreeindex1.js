@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"classCBUSLongMessage.html#a89ea9a350f44b90cc0f0cb2b5b679dde":[6,0,9,18],
 "classCBUSLongMessage.html#a8c3313852177c6c088e1efd79695587f":[6,0,9,25],
 "classCBUSLongMessage.html#a8d11846ec4a7c1c0cfc0b393aca4b514":[6,0,9,9],
 "classCBUSLongMessage.html#aa1a543659701f03231778de529087647":[6,0,9,16],
