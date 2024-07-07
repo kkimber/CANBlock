@@ -341,22 +341,47 @@ void loop()
 //
 void processModuleSwitchChange()
 {
-   // Transmit Line Clear event requests
-   if (lineClearSW.stateChanged())
+   // Generate request events based on local state machine
+   if (BlockState::Normal == localBoxState)
    {
-      CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::lineClear), lineClearSW.isPressed());
+      // From Normal we can only request Line Clear
+      if (lineClearSW.stateChanged())
+      {
+         if (lineClearSW.isPressed())
+         {
+            // Send line clear request
+            CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::blockCleared), false);
+            CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::lineClear), true);
+         }
+      }
    }
-
-   // Transmit Train on Track
-   if (trainOnTrackSW.stateChanged())
+   else if (BlockState::LineClear == localBoxState)
    {
-      CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::trainOnTrack), trainOnTrackSW.isPressed());
+      // From Line Clear we can only request Train on Track
+      if (trainOnTrackSW.stateChanged())
+      {
+         if (trainOnTrackSW.isPressed())
+         {
+            CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::lineClear), false);
+            CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::trainOnTrack), true);
+         }
+      }
    }
-
-   // Transmit Train left Block
-   if (normalSW.stateChanged())
+   else if (BlockState::TrainOnTrack == localBoxState)
    {
-      CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::blockCleared), normalSW.isPressed());
+      // From Train on Track we can only request Block Cleared
+      if (normalSW.stateChanged())
+      {
+         if (normalSW.isPressed())
+         {
+            CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::trainOnTrack), false);
+            CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::blockCleared), true);
+         }
+      }
+   }
+   else if (BlockState::LCBlocked == localBoxState)
+   {
+      // hmm think @todo
    }
 
    // Transmit bell events based on bell push switch state
@@ -451,8 +476,8 @@ void eventhandler(uint8_t index, const CANFrame &msg)
    // Get OpCode of event
    uint8_t opCode = msg.data[0];
 
-   // Check for ACON / ACOF events
-   if ((opCode == OPC_ACON) || (opCode == OPC_ACOF))
+   // Check for Long or Short Accessory events
+   if ((opCode == OPC_ACON) || (opCode == OPC_ACOF) || (opCode == OPC_ASON) || (opCode == OPC_ASOF))
    {
       // read the value of the (single) event variable (EV) associated with this learned event, this is the eventID
       uint8_t ID = module_config.getEventEVval(index, 1);
