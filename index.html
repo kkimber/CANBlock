@@ -99,51 +99,167 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="title">CBUS&reg; CANBlock Module </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> This repository contains firmware for the Raspberry PICO to build a CBUS block instrument.</p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> This repository contains firmware for the Raspberry PICO to build a CBUS based signalling block instrument.</p>
+<p>For correct operation, two CBUSBlock modules are normally required and used as a pair, however it is also possible to use a CBUSBlock in conjuction with another CBUS module (e.g. a CANMIO).</p>
+<p>One of the CANBlock modules will control and indicate the state of the local signal box block, the other will indicate the state of the block to the signal box in rear.</p>
+<p>The design of the CANBlock is fairly generic, but it has been designed to operate as closely as possible as a SR Three-Wire, Three-Position instrument operating on an open block section. See this article for more information: <a href="https://signalbox.org/block-system/southern-railway/">Southern Region block</a></p>
+<p>The firmware was developed for operating a model, where for the particular prototype location, the commutator of the block instrument is locked if the distant signal of the block being entered is Off, or to put it another way, the distant signal must be On before 'Line Clear' can be indicated on the block instrument.</p>
+<p>Without mechanical, or at least electro-mechanical locking of the commutator, it is not possible to physically prevent a user from selecting 'Line Clear' with simple switch inputs. Instead CANBlock uses "soft" interlocking, preventing selection of 'Line Clear' should a specified event be set ON(ACON), indicating (for example) a particular signal or signals are pulled Off.</p>
+<p>With this in mind, the block section being controlled by CANBlock can be in one of four different states:</p>
+<ul>
+<li>Normal (also called Line Blocked)</li>
+<li>Line Clear</li>
+<li>Train on Track</li>
+<li>Normal (Line Clear Blocked)</li>
+</ul>
+<p>Transistion between the above states is managed in CANBlock by a state machine:</p>
+<p><img src="state-machine.png" alt="" class="inline"/></p>
+<p>CANBlock monitors three GPIO inputs for switching between the different states. It is intented that these are connected to a three-way rotary switch, as a mimic of the commutator in a real instrument.</p>
+<p>These switch inputs are configured by the firmware as inputs with internal pull-up, with the expectation that the switches connect the input pin to GND.</p>
+<p>The CANBlock state machine monitors the three switch inputs for falling edge transistions, i.e. the input pin changing logic state from high (1) to low (0). For each falling edge transition, the local block will transmit a CBUS event to the remote CANBlock (box in rear), based on transistions of the state machine and switch positons:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Pin pulled Low   </th><th class="markdownTableHeadNone">CBUS Event sent    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Line Clear Switch   </td><td class="markdownTableBodyNone">EV6    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Train on Track Switch   </td><td class="markdownTableBodyNone">EV7    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Normal Switch   </td><td class="markdownTableBodyNone">EV8   </td></tr>
+</table>
+<p>These events need to be taught to the remote CANBlock via FCU or JMRI. Each event of CANBlock support a single Event Variable, this variable needs to be set to indicate the type of event being received as follows:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">CBUS Event received   </th><th class="markdownTableHeadNone">Event Variable[0] value    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">EV6   </td><td class="markdownTableBodyNone">1 (Line Clear Req)    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">EV7   </td><td class="markdownTableBodyNone">2 (Train on Track Req)    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">EV8   </td><td class="markdownTableBodyNone">3 (Block Cleared Req)   </td></tr>
+</table>
+<p>In response, the receiving (remote) CANBlock module will evaulate the incoming event agaist the state of its internal state machine, and determine if the requested state change can be actioned. If accepted, the remote box will indicate the new state on its own LEDs ACK and will then transmit a CBUS event to the original box as an ACK. Specifically for a Line Clear request, if that is blocked because of the "soft" interlock on the "commutator", the remote CANBlock will send a 'Line Clear Blocked' notification instead of a 'Line Clear' ACK.</p>
+<p>The events sent by the remote box are therefore:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">New State   </th><th class="markdownTableHeadNone">CBUS Event sent    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Line Clear Blocked (NACK)   </td><td class="markdownTableBodyNone">EV0    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Line Clear ACK   </td><td class="markdownTableBodyNone">EV1    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Train on Track ACK   </td><td class="markdownTableBodyNone">EV2    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Normal ACK   </td><td class="markdownTableBodyNone">EV3   </td></tr>
+</table>
+<p>These events should be taught to the block in rear, as acknowledgement of the requested state changes.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">CBUS Event received   </th><th class="markdownTableHeadNone">Event Variable[0] value    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Line Clear Blocked (NACK) EV0   </td><td class="markdownTableBodyNone">0    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Line Clear ACK EV1   </td><td class="markdownTableBodyNone">6    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Train on Track ACK EV2   </td><td class="markdownTableBodyNone">7    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Normal ACK EV3   </td><td class="markdownTableBodyNone">8   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Operating with CANMIO</h1>
+<p>By design, CANBlock modules work as pairs, however it is also possible to use a CANBlock with a CANMIO.</p>
+<p>The advantage of using a CANMIO is it is possible to indicate the block state by a servo, which can drive a "needle" of an analgue display, much like real block instruments, instead of the LED's used by CANBlock.</p>
+<p>A CANMIO with the Universal firmware using the MULTI output type can drive a servo to up to four different positions, allowing a servo to indicate the three different block states (Normal, Line Clear, Train on Track).</p>
+<p>As an example, a CANMIO output channel can be configured as MULTI where:</p>
+<ul>
+<li><b>AT1</b> Line Clear</li>
+<li><b>AT2</b> Train on Track</li>
+<li><b>AT3</b> Normal</li>
+</ul>
+<p>The "request" events produced by one CANBlock can be taught to the CANMIO to drive the servo to the <b>ATx</b> positions indicated above.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">CBUS Event received   </th><th class="markdownTableHeadNone">CANMIO Action [EV2]    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">EV6   </td><td class="markdownTableBodyNone">AT1    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">EV7   </td><td class="markdownTableBodyNone">AT2    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">EV8   </td><td class="markdownTableBodyNone">AT3   </td></tr>
+</table>
+<p>The CANMIO can then be configured to generate feedback events for when the servo reaches the requested position. As the CANMIO does not have default events for MULTI outputs, these need to be configured by teaching the CANMIO short events, and setting the relevant "happening" event in EV1. The CANMIO will then generate feedback events. In summary:</p>
+<ul>
+<li>Add three short events to the software node</li>
+<li>Teach these events to the CANMIO</li>
+<li>Set EV1 for each of these events to the relevant happening:</li>
+</ul>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">CBUS Short Event   </th><th class="markdownTableHeadNone">CANMIO Happening [EV1]    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Line Clear   </td><td class="markdownTableBodyNone">AT1    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Train on Track   </td><td class="markdownTableBodyNone">AT2    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Normal   </td><td class="markdownTableBodyNone">AT3   </td></tr>
+</table>
+<p>These feedback events can then be taught to a CANBlock:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">CBUS Event received   </th><th class="markdownTableHeadNone">Event Variable[0] value    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">AT1   </td><td class="markdownTableBodyNone">6    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">AT2   </td><td class="markdownTableBodyNone">7    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">AT3   </td><td class="markdownTableBodyNone">8   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md2"></a>
+PICO Pin Map</h1>
 <p>The pin mapping used by CANBlock is follows.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Pico Pin   </th><th class="markdownTableHeadNone">Function   </th><th class="markdownTableHeadNone">/   </th><th class="markdownTableHeadNone">Pico Pin   </th><th class="markdownTableHeadNone">Function    </th></tr>
+<th class="markdownTableHeadNone">Pin   </th><th class="markdownTableHeadNone">Function   </th><th class="markdownTableHeadNone">/   </th><th class="markdownTableHeadNone">Pin   </th><th class="markdownTableHeadNone">Function    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">1   </td><td class="markdownTableBodyNone">GP0   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">40   </td><td class="markdownTableBodyNone">VBUS    </td></tr>
+<td class="markdownTableBodyNone">1   </td><td class="markdownTableBodyNone">GP0 Free (Reserved I2C SDA)   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">40   </td><td class="markdownTableBodyNone">VBUS    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">2   </td><td class="markdownTableBodyNone">GP0   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">39   </td><td class="markdownTableBodyNone">VSYS    </td></tr>
+<td class="markdownTableBodyNone">2   </td><td class="markdownTableBodyNone">GP0 Free (Reserved I2C SDL)   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">39   </td><td class="markdownTableBodyNone">VSYS    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">3   </td><td class="markdownTableBodyNone">GND   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">38   </td><td class="markdownTableBodyNone">GND    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">4   </td><td class="markdownTableBodyNone">GP2 BUZZER   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">37   </td><td class="markdownTableBodyNone">3V3_EN    </td></tr>
+<td class="markdownTableBodyNone">4   </td><td class="markdownTableBodyNone">GP2 Buzzer Output   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">37   </td><td class="markdownTableBodyNone">3V3_EN    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">5   </td><td class="markdownTableBodyNone">GP3 BELL   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">36   </td><td class="markdownTableBodyNone">3V3    </td></tr>
+<td class="markdownTableBodyNone">5   </td><td class="markdownTableBodyNone">GP3 Bell Output   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">36   </td><td class="markdownTableBodyNone">3V3    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">6   </td><td class="markdownTableBodyNone">GP4 LED TOT   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">35   </td><td class="markdownTableBodyNone">ADC_VREF    </td></tr>
+<td class="markdownTableBodyNone">6   </td><td class="markdownTableBodyNone">GP4 Train on Track Remote LED   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">35   </td><td class="markdownTableBodyNone">ADC_VREF    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">7   </td><td class="markdownTableBodyNone">GP5 LED TOT   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">34   </td><td class="markdownTableBodyNone">GP28    </td></tr>
+<td class="markdownTableBodyNone">7   </td><td class="markdownTableBodyNone">GP5 Train on Track Local LED   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">34   </td><td class="markdownTableBodyNone">GP28 (Reserved ADC3)    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">8   </td><td class="markdownTableBodyNone">GND   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">33   </td><td class="markdownTableBodyNone">GND    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">9   </td><td class="markdownTableBodyNone">GP6 LED NRM   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">32   </td><td class="markdownTableBodyNone">GP27    </td></tr>
+<td class="markdownTableBodyNone">9   </td><td class="markdownTableBodyNone">GP6 Normal Remote LED   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">32   </td><td class="markdownTableBodyNone">GP27 (Reserved ADC2)    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">10   </td><td class="markdownTableBodyNone">GP7 LED NRM   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">31   </td><td class="markdownTableBodyNone">GP26    </td></tr>
+<td class="markdownTableBodyNone">10   </td><td class="markdownTableBodyNone">GP7 Normal Local LED   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">31   </td><td class="markdownTableBodyNone">GP26 (Reserved ADC1)    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">11   </td><td class="markdownTableBodyNone">GP8 LED LC   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">30   </td><td class="markdownTableBodyNone">RUN    </td></tr>
+<td class="markdownTableBodyNone">11   </td><td class="markdownTableBodyNone">GP8 Line Clear Remote LED   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">30   </td><td class="markdownTableBodyNone">RUN    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">12   </td><td class="markdownTableBodyNone">GP9 LED LC   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">29   </td><td class="markdownTableBodyNone">GP22 LED R    </td></tr>
+<td class="markdownTableBodyNone">12   </td><td class="markdownTableBodyNone">GP9 Line Clear Local LED   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">29   </td><td class="markdownTableBodyNone">GP22 Line Clear Blocked LED    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">13   </td><td class="markdownTableBodyNone">GND   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">28   </td><td class="markdownTableBodyNone">GND    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">14   </td><td class="markdownTableBodyNone">GP10   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">27   </td><td class="markdownTableBodyNone">GP21 LED G    </td></tr>
+<td class="markdownTableBodyNone">14   </td><td class="markdownTableBodyNone">GP10 (Reserved SPI SCLK)   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">27   </td><td class="markdownTableBodyNone">GP21 FLiM Green LED    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">15   </td><td class="markdownTableBodyNone">CAN RX   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">26   </td><td class="markdownTableBodyNone">GP20 LED Y    </td></tr>
+<td class="markdownTableBodyNone">15   </td><td class="markdownTableBodyNone">CAN RX   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">26   </td><td class="markdownTableBodyNone">GP20 FLiM Yellow LED    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">16   </td><td class="markdownTableBodyNone">CAN TX   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">25   </td><td class="markdownTableBodyNone">GP19    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">17   </td><td class="markdownTableBodyNone">GP13   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">24   </td><td class="markdownTableBodyNone">GP18 BELL SW    </td></tr>
+<td class="markdownTableBodyNone">17   </td><td class="markdownTableBodyNone">GP13 (Reserved SPI CS)   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">24   </td><td class="markdownTableBodyNone">GP18 Bell Push Button    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">18   </td><td class="markdownTableBodyNone">GND   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">23   </td><td class="markdownTableBodyNone">GND    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">19   </td><td class="markdownTableBodyNone">GP14   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">22   </td><td class="markdownTableBodyNone">GP17 FLiM BTN    </td></tr>
+<td class="markdownTableBodyNone">19   </td><td class="markdownTableBodyNone">GP14 Line Clear Switch   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">22   </td><td class="markdownTableBodyNone">GP17 FLiM Push Button    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">20   </td><td class="markdownTableBodyNone">GP15   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">21   </td><td class="markdownTableBodyNone">GP16   </td></tr>
+<td class="markdownTableBodyNone">20   </td><td class="markdownTableBodyNone">GP15 Normal Switch   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone">21   </td><td class="markdownTableBodyNone">GP16 Train on Track Switch   </td></tr>
 </table>
 <p>CANBlock uses the soft PIO based CAN2040 CAN controller, so no external CAN controller is required, however a CAN2562 transceiver or similar MUST be connected to the Pico in order to communicate on CAN.</p>
 <dl class="section attention"><dt>Attention</dt><dd>CBUS&reg; is a registered trademark of Dr. Michael Bolton. See <a href="https://cbus-traincontrol.com/">CBUS</a> </dd></dl>

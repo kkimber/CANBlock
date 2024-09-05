@@ -25,20 +25,14 @@
 var NAVTREE =
 [
   [ "CANBlock", "index.html", [
-    [ "CBUS® CANBlock Module", "index.html", null ],
-    [ "Configuration INI", "md_doc_config_ini.html", [
-      [ "WiFi configuration", "md_doc_config_ini.html#autotoc_md2", [
-        [ "Open mode", "md_doc_config_ini.html#autotoc_md3", null ],
-        [ "WPA mode", "md_doc_config_ini.html#autotoc_md4", null ],
-        [ "WPA/WPA2 Mixed mode", "md_doc_config_ini.html#autotoc_md5", null ]
-      ] ],
-      [ "WiFi Country configuration", "md_doc_config_ini.html#autotoc_md6", null ]
+    [ "CBUS® CANBlock Module", "index.html", [
+      [ "Operating with CANMIO", "index.html#autotoc_md1", null ],
+      [ "PICO Pin Map", "index.html#autotoc_md2", null ]
     ] ],
-    [ "CANLocking Web Server", "md_doc_webserver.html", null ],
     [ "Node Variables", "md_doc_nodevars.html", null ],
     [ "CBUS User Interface", "md_doc_ui.html", [
-      [ "Switching between SLiM and FLiM modes", "md_doc_ui.html#autotoc_md10", null ],
-      [ "CBUS CAN Traffic indication", "md_doc_ui.html#autotoc_md11", null ]
+      [ "Switching between SLiM and FLiM modes", "md_doc_ui.html#autotoc_md5", null ],
+      [ "CBUS CAN Traffic indication", "md_doc_ui.html#autotoc_md6", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Classes", "annotated.html", [
@@ -69,7 +63,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "ACAN2040_8cpp.html",
-"classCBUSLongMessage.html#a89ea9a350f44b90cc0f0cb2b5b679dde"
+"classCBUSLongMessage.html#a178ec4c71692444d3ca601af8a8e0ff0"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

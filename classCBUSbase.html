@@ -151,6 +151,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a068657e7aff8ce3b32f417af87673c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15bb94382444966ee8e79aa5c825e417"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#a15bb94382444966ee8e79aa5c825e417">reset</a> (void)=0</td></tr>
 <tr class="separator:a15bb94382444966ee8e79aa5c825e417"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0a3f0563f38824161434179bf598260"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#ae0a3f0563f38824161434179bf598260">FLiMSWCheck</a> (void)</td></tr>
+<tr class="separator:ae0a3f0563f38824161434179bf598260"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a958283d2b917fea4e5c0833e5aafbeea"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#a958283d2b917fea4e5c0833e5aafbeea">sendSingleOpc</a> (const uint8_t opc)</td></tr>
 <tr class="memdesc:a958283d2b917fea4e5c0833e5aafbeea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send single byte frame - opcode only.  <a href="classCBUSbase.html#a958283d2b917fea4e5c0833e5aafbeea">More...</a><br /></td></tr>
 <tr class="separator:a958283d2b917fea4e5c0833e5aafbeea"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,9 +221,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1c33809dfc7551b4764ae37339d6dce9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa36a1875d36639c8a2c823714a1f17c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#aa36a1875d36639c8a2c823714a1f17c1">checkCANenum</a> (void)</td></tr>
 <tr class="separator:aa36a1875d36639c8a2c823714a1f17c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50d1d1caf8ba23893f0e2f8148a3232b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#a50d1d1caf8ba23893f0e2f8148a3232b">indicateMode</a> (uint8_t mode)</td></tr>
-<tr class="memdesc:a50d1d1caf8ba23893f0e2f8148a3232b"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the CBUS LEDs to indicate the current mode  <a href="classCBUSbase.html#a50d1d1caf8ba23893f0e2f8148a3232b">More...</a><br /></td></tr>
-<tr class="separator:a50d1d1caf8ba23893f0e2f8148a3232b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a952f0f3c7773d03b41ae6ee42a2bfa52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#a952f0f3c7773d03b41ae6ee42a2bfa52">indicateModeOnLEDs</a> (uint8_t mode)</td></tr>
+<tr class="memdesc:a952f0f3c7773d03b41ae6ee42a2bfa52"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the CBUS LEDs to indicate the current mode  <a href="classCBUSbase.html#a952f0f3c7773d03b41ae6ee42a2bfa52">More...</a><br /></td></tr>
+<tr class="separator:a952f0f3c7773d03b41ae6ee42a2bfa52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa23086a95998477a18d4430b6e47db3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#afa23086a95998477a18d4430b6e47db3">indicateFLiMMode</a> (bool bFLiM)</td></tr>
 <tr class="separator:afa23086a95998477a18d4430b6e47db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76bc5cb2e29bdb1484c7cf52154d7d5b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#a76bc5cb2e29bdb1484c7cf52154d7d5b">setEventHandlerCB</a> (<a class="el" href="CBUS_8h.html#a3aa3ee99312bbf5b7eb3c4afb62b5511">eventCallback_t</a> evCallback)</td></tr>
@@ -360,12 +362,14 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a055c083fe7b6fbbfc9521bf013467caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a167510df4ab12726e873d8cf1162df17"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#a167510df4ab12726e873d8cf1162df17">m_eventNumber</a></td></tr>
 <tr class="separator:a167510df4ab12726e873d8cf1162df17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa02099f3a1cb635afca90faa06b2a6da"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#aa02099f3a1cb635afca90faa06b2a6da">timeOutTimer</a></td></tr>
-<tr class="separator:aa02099f3a1cb635afca90faa06b2a6da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2015c8595d7aeceecb1460b6341b29c9"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#a2015c8595d7aeceecb1460b6341b29c9">CANenumTime</a></td></tr>
 <tr class="separator:a2015c8595d7aeceecb1460b6341b29c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa81e37f8facabea92c6944b343a0730f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#aa81e37f8facabea92c6944b343a0730f">m_bEnumerationRequired</a></td></tr>
 <tr class="separator:aa81e37f8facabea92c6944b343a0730f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1753c833326fc7cc3b81c1d27d65e12a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CBUS_8h.html#aa10fac440856d17ef723415f10e21cff">fsState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#a1753c833326fc7cc3b81c1d27d65e12a">m_flimState</a></td></tr>
+<tr class="separator:a1753c833326fc7cc3b81c1d27d65e12a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a727bcf249274f972686241b026041cb3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CBUS_8h.html#aa10fac440856d17ef723415f10e21cff">fsState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#a727bcf249274f972686241b026041cb3">m_prevFlimState</a></td></tr>
+<tr class="separator:a727bcf249274f972686241b026041cb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bbfa168d31d120f216f33ebf5d8538b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCBUSLongMessage.html">CBUSLongMessage</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#a5bbfa168d31d120f216f33ebf5d8538b">longMessageHandler</a></td></tr>
 <tr class="separator:a5bbfa168d31d120f216f33ebf5d8538b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29cc20950c24a2816811c9a511fa25e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCBUScoe.html">CBUScoe</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCBUSbase.html#a29cc20950c24a2816811c9a511fa25e4">m_coeObj</a></td></tr>
@@ -966,6 +970,25 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ae0a3f0563f38824161434179bf598260"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0a3f0563f38824161434179bf598260">&#9670;&nbsp;</a></span>FLiMSWCheck()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CBUSbase::FLiMSWCheck </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Monitor the FLiM switch and process FLiM state machine actions </p>
+
+</div>
+</div>
 <a id="ab0580c1201ec323b86d72fafcaa41a6a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab0580c1201ec323b86d72fafcaa41a6a">&#9670;&nbsp;</a></span>getCANID()</h2>
 
@@ -1124,14 +1147,14 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a50d1d1caf8ba23893f0e2f8148a3232b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50d1d1caf8ba23893f0e2f8148a3232b">&#9670;&nbsp;</a></span>indicateMode()</h2>
+<a id="a952f0f3c7773d03b41ae6ee42a2bfa52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a952f0f3c7773d03b41ae6ee42a2bfa52">&#9670;&nbsp;</a></span>indicateModeOnLEDs()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void CBUSbase::indicateMode </td>
+          <td class="memname">void CBUSbase::indicateModeOnLEDs </td>
           <td>(</td>
           <td class="paramtype">uint8_t&#160;</td>
           <td class="paramname"><em>mode</em></td><td>)</td>
@@ -1338,13 +1361,10 @@ false if the message was ignored </dd></dl>
 </div><div class="memdoc">
 
 <p>main CBUS message processing procedure </p>
-<p>use LEDs to indicate that the user can release the switch</p>
-<p>handle switch state changes</p>
 <p>extract the CANID() of the sending module</p>
 <p>if registered, call the user handler with this new frame</p>
 <p>Set flag if we find a CANID() conflict with the frame's producer from another module i.e. not from our own consumed events! Doesn't apply to RTR or zero-length frames, so as not to trigger an enumeration loop</p>
 <p>Show activity on the LED's</p>
-<p>check 30 sec timeout for SLiM/FLiM negotiation with FCU</p>
 <p>end of CBUS message processing</p>
 
 </div>
@@ -2509,6 +2529,28 @@ false the new NV value is invalid </dd></dl>
 
 </div>
 </div>
+<a id="a1753c833326fc7cc3b81c1d27d65e12a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1753c833326fc7cc3b81c1d27d65e12a">&#9670;&nbsp;</a></span>m_flimState</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="CBUS_8h.html#aa10fac440856d17ef723415f10e21cff">fsState</a> CBUSbase::m_flimState</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7305b3f0e22c40e054ce1e663678275a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7305b3f0e22c40e054ce1e663678275a">&#9670;&nbsp;</a></span>m_ledGrn</h2>
 
@@ -2713,8 +2755,8 @@ false the new NV value is invalid </dd></dl>
 
 </div>
 </div>
-<a id="ad2fa72027547d6e1aeb65c6f2d24a63e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2fa72027547d6e1aeb65c6f2d24a63e">&#9670;&nbsp;</a></span>m_sw</h2>
+<a id="a727bcf249274f972686241b026041cb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a727bcf249274f972686241b026041cb3">&#9670;&nbsp;</a></span>m_prevFlimState</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2723,7 +2765,7 @@ false the new NV value is invalid </dd></dl>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCBUSSwitch.html">CBUSSwitch</a> CBUSbase::m_sw</td>
+          <td class="memname"><a class="el" href="CBUS_8h.html#aa10fac440856d17ef723415f10e21cff">fsState</a> CBUSbase::m_prevFlimState</td>
         </tr>
       </table>
   </td>
@@ -2735,8 +2777,8 @@ false the new NV value is invalid </dd></dl>
 
 </div>
 </div>
-<a id="aa02099f3a1cb635afca90faa06b2a6da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa02099f3a1cb635afca90faa06b2a6da">&#9670;&nbsp;</a></span>timeOutTimer</h2>
+<a id="ad2fa72027547d6e1aeb65c6f2d24a63e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2fa72027547d6e1aeb65c6f2d24a63e">&#9670;&nbsp;</a></span>m_sw</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2745,7 +2787,7 @@ false the new NV value is invalid </dd></dl>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t CBUSbase::timeOutTimer</td>
+          <td class="memname"><a class="el" href="classCBUSSwitch.html">CBUSSwitch</a> CBUSbase::m_sw</td>
         </tr>
       </table>
   </td>

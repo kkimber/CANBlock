@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sw_5ftr_5fhold_729',['SW_TR_HOLD',['../CBUS_8h.html#a73cc8b4c872edd51aa67923ba3e997da',1,'CBUS.h']]]
+  ['one_5fsecond_757',['ONE_SECOND',['../CBUS_8h.html#ac93edbf7e8fdbf7398453d51bbd37a97',1,'CBUS.h']]]
 ];
