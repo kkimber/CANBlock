@@ -39,6 +39,10 @@ jobs:
     - name: Checkout pico-sdk submodules
       working-directory: ${{github.workspace}}/pico-sdk
       run: git submodule update --init        
+
+    - name: Use PICO SDK 1.5.1
+      working-directory: ${{github.workspace}}/pico-sdk
+      run: git switch --detach 1.5.1
       
     - name: Install Doxygen
       run:  sudo apt-get install doxygen graphviz -y
