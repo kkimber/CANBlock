@@ -362,6 +362,7 @@ void processModuleSwitchChange()
       {
          if (trainOnTrackSW.isPressed())
          {
+            // Send Train on Track request
             CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::lineClear), false);
             CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::trainOnTrack), true);
          }
@@ -374,6 +375,7 @@ void processModuleSwitchChange()
       {
          if (normalSW.isPressed())
          {
+            // Set Block Cleared (Normal) request
             CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::trainOnTrack), false);
             CBUS.sendMyEvent(static_cast<uint8_t>(OutEventID::blockCleared), true);
          }
