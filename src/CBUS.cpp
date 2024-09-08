@@ -675,12 +675,6 @@ void CBUSbase::process(uint8_t num_messages)
       m_bThisNN = (msg.data[0] >> 5) >= 2 && (nodeID == m_moduleConfig.getNodeNum());
 
       //
-      /// extract the CANID() of the sending module
-      //
-
-      uint8_t remoteCANID = getCANID(msg.id);
-
-      //
       /// if registered, call the user handler with this new frame
       //
 
