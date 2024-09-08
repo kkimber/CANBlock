@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['disableirqs_447',['disableIRQs',['../classCBUSConfig.html#a20b7b2c677281daa03b65306a64701d6',1,'CBUSConfig']]],
+  ['disableirqs_446',['disableIRQs',['../classCBUSConfig.html#a20b7b2c677281daa03b65306a64701d6',1,'CBUSConfig']]],
+  ['doenum_447',['doEnum',['../classCBUSbase.html#a677b7494af204b4a616f2036121adc19',1,'CBUSbase']]],
   ['doevlrn_448',['doEvlrn',['../classCBUSbase.html#a2c9c96adef00f094b520258bebb58f6f',1,'CBUSbase']]],
   ['doevuln_449',['doEvuln',['../classCBUSbase.html#a06430682bb4021081043128da4b5f09a',1,'CBUSbase']]],
   ['donenrd_450',['doNenrd',['../classCBUSbase.html#a416c84ddbd3f655c8c9801c780e248f0',1,'CBUSbase']]],

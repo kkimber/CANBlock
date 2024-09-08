@@ -24,7 +24,7 @@ var searchData=
   ['sendopcnn_325',['sendOpcNN',['../classCBUSbase.html#aeb652be066edc3372876606530ae5898',1,'CBUSbase']]],
   ['sendsingleopc_326',['sendSingleOpc',['../classCBUSbase.html#a958283d2b917fea4e5c0833e5aafbeea',1,'CBUSbase']]],
   ['sendwrack_327',['sendWRACK',['../classCBUSbase.html#a7151220cbbb1231967b549cad3df4b83',1,'CBUSbase']]],
-  ['setcanid_328',['setCANID',['../classCBUSConfig.html#a5732139949b3dbff43f496388ea7568a',1,'CBUSConfig']]],
+  ['setcanid_328',['setCANID',['../classCBUSConfig.html#a705fa45b9345ead336abc4c2ee9b99e4',1,'CBUSConfig']]],
   ['setchipeepromval_329',['setChipEEPROMVal',['../classCBUSConfig.html#aa2f81a90805daf68bc0ba3fea4c691d4',1,'CBUSConfig']]],
   ['setdelay_330',['setDelay',['../classCBUSLongMessage.html#a07af8de3b247fe5e42440926d9f7209a',1,'CBUSLongMessage']]],
   ['seteepromtype_331',['setEEPROMtype',['../classCBUSConfig.html#a640e633392cf9f6dcd5373504cb3973c',1,'CBUSConfig']]],
