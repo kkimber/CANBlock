@@ -1,29 +1,31 @@
 set(CAN2040_SOURCE can2040/src)
 set(CBUSDEFS cbusdefs)
-set(CANBLOCK CANBlock)
+set(CBUSPICOLIB CBUSPicoLib)
 
 add_executable(CBUSBlock
    # Source for CAN2040 PIO based CAN controller
    ${CAN2040_SOURCE}/can2040.c
    # Sources for CBUSPico libary 
-   CBUSLED.cpp
-   CBUSSwitch.cpp
-   CBUSConfig.cpp
-   CBUSParams.cpp
-   SystemTick.cpp
-   CBUSCircularBuffer.cpp
-   CBUSLongMessage.cpp
-   CBUS.cpp
-   ACAN2040.cpp
-   CBUSACAN2040.cpp
+   ${CBUSPICOLIB}/CBUSLED.cpp
+   ${CBUSPICOLIB}/CBUSSwitch.cpp
+   ${CBUSPICOLIB}/CBUSConfig.cpp
+   ${CBUSPICOLIB}/CBUSParams.cpp
+   ${CBUSPICOLIB}/SystemTick.cpp
+   ${CBUSPICOLIB}/CBUSCircularBuffer.cpp
+   ${CBUSPICOLIB}/CBUSLongMessage.cpp
+   ${CBUSPICOLIB}/CBUS.cpp
+   ${CBUSPICOLIB}/ACAN2040.cpp
+   ${CBUSPICOLIB}/CBUSACAN2040.cpp
    # CANBlock module using library
-   ${CANBLOCK}/CANBlock.cpp
+   CANBlock.cpp
 )
 
 target_include_directories(CBUSBlock PRIVATE
    ${CMAKE_CURRENT_SOURCE_DIR}
    ${CAN2040_SOURCE}
    ${CBUSDEFS}
+   ${CBUSPICOLIB}
+   ${CBUSPICOLIB}/GridConnectDummy
 )
 
 target_compile_options(CBUSBlock PRIVATE
