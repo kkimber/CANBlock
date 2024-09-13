@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['begin_36',['begin',['../classACAN2040.html#a4e519251229deb16d724614cf65fec87',1,'ACAN2040::begin()'],['../classCBUSbase.html#a645f1658ea21b266244e0e464b5bf5aa',1,'CBUSbase::begin()'],['../classCBUSACAN2040.html#a7fdcfc0b169846f9f8a117c07df7d294',1,'CBUSACAN2040::begin()'],['../classCBUSConfig.html#ae8b3fb7ae27b29b2c675946868b168a9',1,'CBUSConfig::begin()']]],
-  ['bitclear_37',['bitClear',['../CBUSUtil_8h.html#abbe843c0521806a4ab2e7cffe44769e2',1,'CBUSUtil.h']]],
-  ['bitread_38',['bitRead',['../CBUSUtil_8h.html#aff20d8c0a05ad3043afa2e4ad9ebe768',1,'CBUSUtil.h']]],
-  ['bitset_39',['bitSet',['../CBUSUtil_8h.html#a6a8195c0e930f86c6af03ba6af8b41dd',1,'CBUSUtil.h']]],
-  ['bitwrite_40',['bitWrite',['../CBUSUtil_8h.html#a42c17f59f3f9a3112d01246760067a8e',1,'CBUSUtil.h']]],
-  ['blink_41',['blink',['../classCBUSLED.html#a6d7f0e90c5ed582f31f7ea66c73e8a8c',1,'CBUSLED']]],
-  ['blink_5frate_42',['BLINK_RATE',['../CBUSLED_8cpp.html#a287183a0ab97fbc77f66d4ad3d1f2000',1,'CBUSLED.cpp']]],
-  ['buffer_43',['buffer',['../CBUS_8h.html#a447c99b6f9b0430ac75f34fe9afcc152',1,'receive_context_t::buffer()'],['../CBUS_8h.html#ac6a319507c4d9e241d459e9ca1098452',1,'send_context_t::buffer()']]],
-  ['byte_44',['byte',['../CBUS_8h.html#a59c56b0e8d5efae3543683ace91fe630',1,'module_name_t']]]
+  ['can_5frx_6',['CAN_RX',['../CANBlock_8cpp.html#a0a06a25d8ea420898326358fdccdb359',1,'CANBlock.cpp']]],
+  ['can_5ftx_7',['CAN_TX',['../CANBlock_8cpp.html#a0d27de6a35d3a4600e6803895cdcf60a',1,'CANBlock.cpp']]],
+  ['canblock_2ecpp_8',['CANBlock.cpp',['../CANBlock_8cpp.html',1,'']]],
+  ['cbus_9',['CBUS',['../CANBlock_8cpp.html#aa4b4e13d8a0f0f825a49ab152cdd866d',1,'CANBlock.cpp']]],
+  ['cbus_20user_20interface_10',['CBUS User Interface',['../md_doc_ui.html',1,'']]],
+  ['cbus_26reg_3b_20canblock_20module_11',['CBUS&amp;reg; CANBlock Module',['../index.html',1,'']]],
+  ['clrlocalled_12',['clrlocalLED',['../CANBlock_8cpp.html#a29dc1237b91fc90b54a1c206a644c97b',1,'CANBlock.cpp']]],
+  ['clrremoteled_13',['clrremoteLED',['../CANBlock_8cpp.html#a8476f97a3cf2c67ba47bf0c38005b9c5',1,'CANBlock.cpp']]],
+  ['commutatorlock_14',['commutatorLock',['../CANBlock_8cpp.html#a572055defaed992ec4675237d779bebeab670495a98b38ce592407577b42225e7',1,'CANBlock.cpp']]]
 ];

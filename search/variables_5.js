@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['flash_5fbase_653',['FLASH_BASE',['../CBUSConfig_8cpp.html#acaf5b1b75a7ba3ab52b15408c95ad231',1,'CBUSConfig.cpp']]],
-  ['flash_5foffset_654',['FLASH_OFFSET',['../CBUSConfig_8cpp.html#aef3de6b7fc0911720e69234e5491cbdf',1,'CBUSConfig.cpp']]],
-  ['flash_5fsize_655',['FLASH_SIZE',['../CBUSConfig_8cpp.html#ae54ee851b5a8e2738ad3fb8c030d1272',1,'CBUSConfig.cpp']]],
-  ['framehandler_656',['frameHandler',['../classCBUSbase.html#a87c0b771b6df8cf0e2f04d5caa596598',1,'CBUSbase']]]
+  ['normal_111',['NORMAL',['../CANBlock_8cpp.html#a24cd664c116d3ab5b57a2297a06375a1',1,'CANBlock.cpp']]],
+  ['normalsw_112',['normalSW',['../CANBlock_8cpp.html#a3cafa531e4058b30adfd9b0804ed5409',1,'CANBlock.cpp']]],
+  ['nrmlocalled_113',['nrmlocalLED',['../CANBlock_8cpp.html#ab3f10b6dc72c5e00bbcc6187717b5373',1,'CANBlock.cpp']]],
+  ['nrmremoteled_114',['nrmremoteLED',['../CANBlock_8cpp.html#a5a8c192f4d4b4a51e29b312da487bfdb',1,'CANBlock.cpp']]]
 ];

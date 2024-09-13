@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['nodenumber_693',['nodeNumber',['../CBUSConfig_8h.html#ab1caaf288c499097b64c8cacfbfb8a8f',1,'EVENT_INFO_t']]],
-  ['notify_694',['notify',['../CBUSACAN2040_8cpp.html#a674da8eef20a253474cd7e0202629b12',1,'CBUSACAN2040.cpp']]],
-  ['num_5fparams_695',['NUM_PARAMS',['../CBUSParams_8h.html#af04fe3ed5d8e57d5be8810d1bfdafa0c',1,'CBUSParams.h']]]
+  ['ver_5fbeta_123',['VER_BETA',['../CANBlock_8cpp.html#abbe784f70bce9d8d07400438b24403a8',1,'CANBlock.cpp']]],
+  ['ver_5fmaj_124',['VER_MAJ',['../CANBlock_8cpp.html#ab34dadb147ed9f5d6397ce6e5276d07f',1,'CANBlock.cpp']]],
+  ['ver_5fmin_125',['VER_MIN',['../CANBlock_8cpp.html#a9b0edd62b7405ed9875454fed468bf46',1,'CANBlock.cpp']]]
 ];

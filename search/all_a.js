@@ -1,13 +1,6 @@
 var searchData=
 [
-  ['last_5ffragment_5freceived_207',['last_fragment_received',['../CBUS_8h.html#ab416de5c943bc5bc0bc8f46afc6f55e1',1,'receive_context_t']]],
-  ['last_5ffragment_5fsent_208',['last_fragment_sent',['../CBUS_8h.html#af3e88e8dff5f2c9f75f3506cf65fdea0',1,'send_context_t']]],
-  ['len_209',['len',['../CBUSCircularBuffer_8h.html#a409a3c26b60661f3fb537b7838913c0a',1,'CANFrame']]],
-  ['loadnvs_210',['loadNVs',['../classCBUSConfig.html#ac911e839983ea7f628f2da7d04aaffa1',1,'CBUSConfig']]],
-  ['long_5fflicker_5ftime_211',['LONG_FLICKER_TIME',['../CBUSLED_8cpp.html#af352d1847975c5f415ff0db362a6435b',1,'CBUSLED.cpp']]],
-  ['long_5fmessage_5fdefault_5fdelay_212',['LONG_MESSAGE_DEFAULT_DELAY',['../CBUS_8h.html#ade886bd57464690e87f109817c359679',1,'CBUS.h']]],
-  ['long_5fmessage_5freceive_5ftimeout_213',['LONG_MESSAGE_RECEIVE_TIMEOUT',['../CBUS_8h.html#a4d2cdf90ee3f656a2ab67e118f4e0efc',1,'CBUS.h']]],
-  ['longmessagecallback_5ft_214',['longMessageCallback_t',['../CBUS_8h.html#a91013b482524acb97560dcb753d3a6f5',1,'CBUS.h']]],
-  ['longmessagehandler_215',['longMessageHandler',['../classCBUSbase.html#a5bbfa168d31d120f216f33ebf5d8538b',1,'CBUSbase']]],
-  ['lowbyte_216',['lowByte',['../CBUSUtil_8h.html#a57600234f6e26049357fbecfbdca9537',1,'CBUSUtil.h']]]
+  ['readme_2emd_55',['README.md',['../README_8md.html',1,'']]],
+  ['remoteboxstate_56',['remoteBoxState',['../CANBlock_8cpp.html#a128d8230e07b9232b06bc5e2cfffdaa2',1,'CANBlock.cpp']]],
+  ['resetlineclear_57',['resetLineClear',['../CANBlock_8cpp.html#a572055defaed992ec4675237d779bebea1920a51b225f645073d907dcede86d6e',1,'resetLineClear():&#160;CANBlock.cpp'],['../CANBlock_8cpp.html#aa2e59b1af2c1dd28bb9e72b5f74245e4a1920a51b225f645073d907dcede86d6e',1,'resetLineClear():&#160;CANBlock.cpp']]]
 ];

@@ -35,26 +35,13 @@ var NAVTREE =
       [ "CBUS CAN Traffic indication", "md_doc_ui.html#autotoc_md6", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
-    [ "Classes", "annotated.html", [
-      [ "Class List", "annotated.html", "annotated_dup" ],
-      [ "Class Index", "classes.html", null ],
-      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
-      [ "Class Members", "functions.html", [
-        [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", null ]
-      ] ]
-    ] ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [
         [ "All", "globals.html", null ],
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
-        [ "Typedefs", "globals_type.html", null ],
-        [ "Enumerations", "globals_enum.html", null ],
-        [ "Enumerator", "globals_eval.html", null ],
-        [ "Macros", "globals_defs.html", null ]
+        [ "Enumerations", "globals_enum.html", null ]
       ] ]
     ] ]
   ] ]
@@ -62,8 +49,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"ACAN2040_8cpp.html",
-"classCBUSLongMessage.html#a178ec4c71692444d3ca601af8a8e0ff0"
+"CANBlock_8cpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
