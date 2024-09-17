@@ -1,3 +1,14 @@
+# Generated Cmake Pico project file
+
+cmake_minimum_required(VERSION 3.13)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Initialise pico_sdk from installed location
+# (note this can come from environment, CMake cache etc)
+
 # == DO NEVER EDIT THE NEXT LINES for Raspberry Pi Pico VS Code Extension to work ==
 if(WIN32)
     set(USERHOME $ENV{USERPROFILE})
@@ -12,24 +23,76 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
-cmake_minimum_required(VERSION 3.5)
+set (PICO_BOARD pico CACHE STRING "Board type")
 
-# Define the target board
-set (PICO_BOARD pico)
-
-# Pull in the SDK (Must be before project definition)
+# Pull in the SDK (must be before project definition)
 include(pico_sdk_import.cmake)
 
-# Define project
-project(CBUSLock-Module C CXX ASM)
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+project(CANBlock C CXX ASM)
 
-# Initialize the SDK
+# Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-# Add sources
-add_subdirectory(src)
+# Set source paths
+set(CAN2040_SOURCE src/can2040/src)
+set(CBUSDEFS src/cbusdefs)
+set(CBUSPICOLIB src/CBUSPicoLib)
+set(SRC src)
+
+# Add executable. Default name is the project name, version 0.1
+add_executable(CANBlock
+   # Source for CAN2040 PIO based CAN controller
+   ${CAN2040_SOURCE}/can2040.c
+   # Sources for CBUSPico libary 
+   ${CBUSPICOLIB}/CBUSLED.cpp
+   ${CBUSPICOLIB}/CBUSSwitch.cpp
+   ${CBUSPICOLIB}/CBUSConfig.cpp
+   ${CBUSPICOLIB}/CBUSParams.cpp
+   ${CBUSPICOLIB}/SystemTick.cpp
+   ${CBUSPICOLIB}/CBUSCircularBuffer.cpp
+   ${CBUSPICOLIB}/CBUSLongMessage.cpp
+   ${CBUSPICOLIB}/CBUS.cpp
+   ${CBUSPICOLIB}/ACAN2040.cpp
+   ${CBUSPICOLIB}/CBUSACAN2040.cpp
+   # CANBlock module using library
+   ${SRC}/CANBlock.cpp
+)
+
+# Setup include paths
+target_include_directories(CANBlock PRIVATE
+   ${SRC}
+   ${CAN2040_SOURCE}
+   ${CBUSDEFS}
+   ${CBUSPICOLIB}
+   ${CBUSPICOLIB}/GridConnectDummy
+)
+
+# Setup compiler options
+target_compile_options(CANBlock PRIVATE
+   # can2040 has an unused param, -Wpedantic is a step too far !
+   -Wall -Wextra -Werror -Wno-unused-parameter 
+)
+
+# Custom linker scipt to put CAN2040 code into RAM
+pico_set_linker_script(CANBlock ${CMAKE_CURRENT_SOURCE_DIR}/memmap_block.ld)
+
+# pull in common dependencies
+target_link_libraries(
+   CANBlock
+   pico_stdlib
+   #pico_stdio_semihosting
+   pico_multicore
+   cmsis_core
+   hardware_i2c
+   hardware_flash
+)
+
+pico_add_extra_outputs(CANBlock)
+
+# create map/bin/hex file etc.
+pico_add_extra_outputs(CANBlock)
+
+# add url via pico_set_program_url
 
 # Look for the Doxygen package
 find_package(Doxygen)
@@ -75,4 +138,3 @@ if (DOXYGEN_FOUND)
 else (DOXYGEN_FOUND)
    message("Doxygen need to be installed to generate the doxygen documentation")
 endif (DOXYGEN_FOUND)
-
