@@ -79,10 +79,10 @@ jobs:
     - name: Add artifacts to publish
       run: |
         cd downloads
-        cp ${{github.workspace}}/build/src/CBUSBlock.bin .
-        cp ${{github.workspace}}/build/src/CBUSBlock.uf2 .
-        cp ${{github.workspace}}/build/src/CBUSBlock.elf .
-        cp ${{github.workspace}}/build/src/CBUSBlock.elf.map .
+        cp ${{github.workspace}}/build/CANBlock.bin .
+        cp ${{github.workspace}}/build/CANBlock.uf2 .
+        cp ${{github.workspace}}/build/CANBlock.elf .
+        cp ${{github.workspace}}/build/CANBlock.elf.map .
         cd ..
     
     - name: Upload build artifacts
