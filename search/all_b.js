@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['setup_58',['setup',['../CANBlock_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d',1,'CANBlock.cpp']]],
-  ['setupcbus_59',['setupCBUS',['../CANBlock_8cpp.html#a36869766bb246b1be3003952fd763da4',1,'CANBlock.cpp']]],
-  ['switch0_60',['SWITCH0',['../CANBlock_8cpp.html#a19239307b97dad9fdfae9c5db36e1739',1,'CANBlock.cpp']]]
+  ['readme_2emd_0',['README.md',['../README_8md.html',1,'']]],
+  ['reg_20canblock_20module_1',['CBUS&amp;reg; CANBlock Module',['../index.html',1,'']]],
+  ['remoteboxstate_2',['remoteBoxState',['../CANBlock_8cpp.html#a128d8230e07b9232b06bc5e2cfffdaa2',1,'CANBlock.cpp']]],
+  ['resetlineclear_3',['resetlineclear',['../CANBlock_8cpp.html#a572055defaed992ec4675237d779bebea1920a51b225f645073d907dcede86d6e',1,'resetLineClear:&#160;CANBlock.cpp'],['../CANBlock_8cpp.html#aa2e59b1af2c1dd28bb9e72b5f74245e4a1920a51b225f645073d907dcede86d6e',1,'resetLineClear:&#160;CANBlock.cpp']]]
 ];

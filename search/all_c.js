@@ -1,11 +1,8 @@
 var searchData=
 [
-  ['todo_20list_61',['Todo List',['../todo.html',1,'']]],
-  ['totlocalled_62',['totlocalLED',['../CANBlock_8cpp.html#a5f9f8bbe535b9d8aabe04380ed5a1152',1,'CANBlock.cpp']]],
-  ['totremoteled_63',['totremoteLED',['../CANBlock_8cpp.html#a4a376a0c7464546d2989383d28c34b5f',1,'CANBlock.cpp']]],
-  ['train_5fon_5ftrack_64',['TRAIN_ON_TRACK',['../CANBlock_8cpp.html#a56369001c0cb3749cf1949191c68d387',1,'CANBlock.cpp']]],
-  ['trainontrack_65',['trainOnTrack',['../CANBlock_8cpp.html#a572055defaed992ec4675237d779bebea9ab28b035c4f57f8a0c700b515d06a95',1,'trainOnTrack():&#160;CANBlock.cpp'],['../CANBlock_8cpp.html#aa2e59b1af2c1dd28bb9e72b5f74245e4a9ab28b035c4f57f8a0c700b515d06a95',1,'trainOnTrack():&#160;CANBlock.cpp']]],
-  ['trainontrack_66',['TrainOnTrack',['../CANBlock_8cpp.html#ad6cf116f1b761cc66851b7c34eb68d88a490e291f9d364271107d7628736da31b',1,'CANBlock.cpp']]],
-  ['trainontrackack_67',['trainOnTrackAck',['../CANBlock_8cpp.html#a572055defaed992ec4675237d779bebea2b023a3230665b208db2c959f991bf02',1,'trainOnTrackAck():&#160;CANBlock.cpp'],['../CANBlock_8cpp.html#aa2e59b1af2c1dd28bb9e72b5f74245e4a2b023a3230665b208db2c959f991bf02',1,'trainOnTrackAck():&#160;CANBlock.cpp']]],
-  ['trainontracksw_68',['trainOnTrackSW',['../CANBlock_8cpp.html#a65eaa099deb401f7e7bc498c093dcdde',1,'CANBlock.cpp']]]
+  ['setup_0',['setup',['../CANBlock_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d',1,'CANBlock.cpp']]],
+  ['setupcbus_1',['setupCBUS',['../CANBlock_8cpp.html#a36869766bb246b1be3003952fd763da4',1,'CANBlock.cpp']]],
+  ['slim_20and_20flim_20modes_2',['Switching between SLiM and FLiM modes',['../md_doc_2ui.html#autotoc_md5',1,'']]],
+  ['switch0_3',['SWITCH0',['../CANBlock_8cpp.html#a19239307b97dad9fdfae9c5db36e1739',1,'CANBlock.cpp']]],
+  ['switching_20between_20slim_20and_20flim_20modes_4',['Switching between SLiM and FLiM modes',['../md_doc_2ui.html#autotoc_md5',1,'']]]
 ];

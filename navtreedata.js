@@ -25,14 +25,11 @@
 var NAVTREE =
 [
   [ "CANBlock", "index.html", [
-    [ "CBUS® CANBlock Module", "index.html", [
-      [ "Operating with CANMIO", "index.html#autotoc_md1", null ],
-      [ "PICO Pin Map", "index.html#autotoc_md2", null ]
-    ] ],
-    [ "Node Variables", "md_doc_nodevars.html", null ],
-    [ "CBUS User Interface", "md_doc_ui.html", [
-      [ "Switching between SLiM and FLiM modes", "md_doc_ui.html#autotoc_md5", null ],
-      [ "CBUS CAN Traffic indication", "md_doc_ui.html#autotoc_md6", null ]
+    [ "CBUS® CANBlock Module", "index.html", "index" ],
+    [ "Node Variables", "md_doc_2nodevars.html", null ],
+    [ "CBUS User Interface", "md_doc_2ui.html", [
+      [ "Switching between SLiM and FLiM modes", "md_doc_2ui.html#autotoc_md5", null ],
+      [ "CBUS CAN Traffic indication", "md_doc_2ui.html#autotoc_md6", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Files", "files.html", [
